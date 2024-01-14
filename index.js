@@ -1,6 +1,14 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const Note = require("./models/note");
+
+// // DO NOT SAVE YOUR PASSWORD TO GITHUB!!
+// // const url = `mongodb+srv://klpabes99:${password}@cluster0.cuh0xr5.mongodb.net/noteApp?retryWrites=true&w=majority`;
+
+// mongoose.set("strictQuery", false);
+// mongoose.connect(url);
 
 app.use(cors());
 app.use(express.json());
@@ -29,7 +37,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/notes", (req, res) => {
-  res.json(notes);
+  Note.find({}).then((notes) => {
+    res.json(notes);
+  });
 });
 
 const generateId = () => {
@@ -76,7 +86,7 @@ app.delete("/api/notes/:id", (request, response) => {
   response.status(204).end();
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
